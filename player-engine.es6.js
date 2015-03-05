@@ -6,11 +6,10 @@
 "use strict";
 
 var TimeEngine = require("time-engine");
-var defaultAudioContext = require("audio-context");
 
 class PlayerEngine extends TimeEngine {
-  constructor(options = {}, audioContext = defaultAudioContext) {
-    super(audioContext);
+  constructor(buffer = null) {
+    super();
 
     this.transport = null; // set when added to transporter
 
@@ -18,7 +17,7 @@ class PlayerEngine extends TimeEngine {
      * Audio buffer
      * @type {AudioBuffer}
      */
-    this.buffer = options.buffer || null;
+    this.buffer = buffer;
 
     /**
      * Fade time for chaining segments (e.g. in start, stop, and seek)
@@ -36,14 +35,14 @@ class PlayerEngine extends TimeEngine {
 
     this.__playingSpeed = 1;
 
-    this.__gainNode = audioContext.createGain();
-    this.__gainNode.gain.value = options.gain || 1;
+    this.__gainNode = this.audioContext.createGain();
+    this.__gainNode.gain.value = 1;
 
     this.outputNode = this.__gainNode;
   }
 
   __start(time, position, speed) {
-    var audioContext = super.audioContext;
+    var audioContext = this.audioContext;
 
     if (this.buffer) {
       var bufferDuration = this.buffer.duration;

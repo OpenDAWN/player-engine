@@ -6,11 +6,10 @@
 "use strict";
 
 var TimeEngine = require("time-engine");
-var defaultAudioContext = require("audio-context");
 
 var PlayerEngine = (function(super$0){var PRS$0 = (function(o,t){o["__proto__"]={"a":t};return o["a"]===t})({},{});var DP$0 = Object.defineProperty;var GOPD$0 = Object.getOwnPropertyDescriptor;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,GOPD$0(s,p));}}return t};var SP$0 = Object.setPrototypeOf||function(o,p){if(PRS$0){o["__proto__"]=p;}else {DP$0(o,"__proto__",{"value":p,"configurable":true,"enumerable":false,"writable":true});}return o};var OC$0 = Object.create;if(!PRS$0)MIXIN$0(PlayerEngine, super$0);var proto$0={};
-  function PlayerEngine() {var options = arguments[0];if(options === void 0)options = {};var audioContext = arguments[1];if(audioContext === void 0)audioContext = defaultAudioContext;
-    super$0.call(this, audioContext);
+  function PlayerEngine() {var buffer = arguments[0];if(buffer === void 0)buffer = null;
+    super$0.call(this);
 
     this.transport = null; // set when added to transporter
 
@@ -18,7 +17,7 @@ var PlayerEngine = (function(super$0){var PRS$0 = (function(o,t){o["__proto__"]=
      * Audio buffer
      * @type {AudioBuffer}
      */
-    this.buffer = options.buffer || null;
+    this.buffer = buffer;
 
     /**
      * Fade time for chaining segments (e.g. in start, stop, and seek)
@@ -36,14 +35,14 @@ var PlayerEngine = (function(super$0){var PRS$0 = (function(o,t){o["__proto__"]=
 
     this.__playingSpeed = 1;
 
-    this.__gainNode = audioContext.createGain();
-    this.__gainNode.gain.value = options.gain || 1;
+    this.__gainNode = this.audioContext.createGain();
+    this.__gainNode.gain.value = 1;
 
     this.outputNode = this.__gainNode;
   }if(super$0!==null)SP$0(PlayerEngine,super$0);PlayerEngine.prototype = OC$0(super$0!==null?super$0.prototype:null,{"constructor":{"value":PlayerEngine,"configurable":true,"writable":true}, cyclic: {"get": $cyclic_get$0, "set": $cyclic_set$0, "configurable":true,"enumerable":true}, gain: {"get": $gain_get$0, "set": $gain_set$0, "configurable":true,"enumerable":true}});DP$0(PlayerEngine,"prototype",{"configurable":false,"enumerable":false,"writable":false});
 
   proto$0.__start = function(time, position, speed) {
-    var audioContext = super$0.audioContext;
+    var audioContext = this.audioContext;
 
     if (this.buffer) {
       var bufferDuration = this.buffer.duration;
